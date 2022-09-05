@@ -4,7 +4,13 @@
 
 ### 利用手順
 
-#### [1] Docker Desktop のインストール
+#### [1] Docker Desktop のインストールとKubernetesの有効化
+
+#### (複数Podで起動する場合) LoadBalancerのsessionAffinity問題への対応
+
+以下の記事及び、そのリンク先を参考に、WSLカーネルのビルドを実施してください。  
+https://www.rinsymbol.net/entry/2022/09/04/024140
+
 
 #### [2] Git のインストール
 
