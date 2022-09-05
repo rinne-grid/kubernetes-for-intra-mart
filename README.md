@@ -1,4 +1,4 @@
-## K8s for intra-mart
+## Kubernetes for intra-mart
 
 - intra-mart の検証環境を Kubernetes 上に構築
 
@@ -182,7 +182,7 @@ HTTPS_PROXY=http://user:password@server:port/
 > docker-compose build --no-cache
 ```
 
-### [11] Docker DesktopのWSL上にリソースマウント用のディレクトリを作成する
+#### [11] Docker DesktopのWSL上にリソースマウント用のディレクトリを作成する
 
 ```sh
 > wsl -d docker-desktop 
@@ -191,7 +191,7 @@ HTTPS_PROXY=http://user:password@server:port/
 > mkdir -p /mnt/host/wsl/docker-desktop-data/version-pack-data/community/k8s-pvs/pv-imart-webapps
 ```
 
-### [12] Kubernetes クラスターにデプロイする
+#### [12] Kubernetes クラスターにデプロイする
 
 ```sh
 > cd k8s
@@ -241,7 +241,7 @@ http://localhost:8080/imart/system/login
 ![dashboard](http://www.rinsymbol.sakura.ne.jp/github_images/docker/dashboard.PNG)
 
 
-### [13] 複数PodでAPサーバーを起動する
+#### [13] 複数PodでAPサーバーを起動する
 
 * 起動するまで、長くて10分程度かかるため、気長に待ってあげてください。
 
@@ -255,7 +255,7 @@ http://localhost:8080/imart/system/login
 # intra-mart-ap   2/2     0s
 ```
 
-### (任意手順) 複数Pod(StatefulSet)で起動できていることの確認
+#### (任意手順) 複数Pod(StatefulSet)で起動できていることの確認
 
 * システム管理画面にアクセス
   * http://localhost:8080/imart/system/login
@@ -277,7 +277,7 @@ http://localhost:8080/imart/system/login
 
 
 
-### (その他) 停止手順
+#### (その他) 停止手順
 
 ```sh
 > cd k8s
@@ -285,7 +285,7 @@ http://localhost:8080/imart/system/login
 > kubectl delete -f ./002_setup-db.yaml
 ```
 
-### (その他) 永続化したデータやストレージの削除手順
+#### (その他) 永続化したデータやストレージの削除手順
 
 ```sh
 > cd k8s
