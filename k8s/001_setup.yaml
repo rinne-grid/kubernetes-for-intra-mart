@@ -1,0 +1,178 @@
+# PostgreSQLで利用するStorageClass
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-storage-db
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+---
+# intra-martのシステムストレージで利用するStorageClass
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-storage-im-system-store
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+---
+# intra-martのwebappsフォルダで利用するStorageClass
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-storage-im-webapps
+provisioner: docker.io/hostpath
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+allowVolumeExpansion: true
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-imart-db
+spec:
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage-db
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  local:
+    # docker-desktop上の/mnt/host/wsl/docker-desktop-data/version-pack-data/community/k8s-pvs/pvc-imart-dbにマウント
+    path: /var/lib/k8s-pvs/pvc-imart-db
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+            - docker-desktop
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-imart-system-store
+spec:
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage-im-system-store
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  local:
+    path: /var/lib/k8s-pvs/pv-imart-system-store
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+            - docker-desktop
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-imart-webapps
+spec:
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: local-storage-im-webapps
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  local:
+    path: /var/lib/k8s-pvs/pv-imart-webapps
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+            - docker-desktop
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-imart-db
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: local-storage-db
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-imart-system-storage
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: local-storage-im-system-store
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ap
+spec:
+  selector:
+    app: ap
+  ports:
+  - port: 8080
+    targetPort: 8080
+    # nodePort: 30000
+  type: LoadBalancer
+  sessionAffinity: ClientIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+spec:
+  selector:
+    app: db
+  ports:
+  - port: 5432
+    targetPort: 5432
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adminer
+spec:
+  selector:
+    matchLabels:
+      app: adminer
+  template:
+    metadata:
+      labels:
+        app: adminer
+    spec:
+      containers:
+      - name: adminer
+        image: adminer
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: adminer
+spec:
+  selector:
+    app: adminer
+  ports:
+  - port: 8889
+    targetPort: 8080
+    nodePort: 30001
+  type: LoadBalancer

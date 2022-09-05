@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: intra-mart-ap
+spec:
+  serviceName: intra-mart-ap
+  podManagementPolicy: OrderedReady
+  minReadySeconds: 10
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Delete
+    whenScaled: Retain
+  selector:
+    matchLabels:
+      app: ap
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ap
+    spec:
+      containers:
+      - name: ap
+        imagePullPolicy: Never
+        image: rinne-grid/k8s-for-intra-mart:v1.0.0
+        resources:
+          limits:
+            memory: "4096Mi"
+            cpu: "1024m"
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - mountPath: /im-data/storage
+          name: im-system-storage
+        - mountPath: /ap-server/webapps/imart
+          name: webapps-storage
+        env:
+          - name: RESIN_HOME
+            value: /ap-server
+        command: 
+          ["/ap-server/bin/resinctl"]
+        args:
+          - -server 
+          - app-0 
+          - start-with-foreground
+      volumes:
+        - name: im-system-storage
+          persistentVolumeClaim:
+            claimName: pvc-imart-system-storage
+
+  volumeClaimTemplates:
+    - metadata:
+        name: webapps-storage
+      spec:
+        storageClassName: local-storage-im-webapps
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 5Gi

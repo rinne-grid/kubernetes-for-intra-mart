@@ -1,0 +1,7 @@
+ap/resin-pro/*
+ap/resin-pro*/*
+ap/resin/*
+ap/war/*
+ap/jdbc/*
+.idea
+.idea/**

@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: intra-mart-db
+spec:
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+      - name: db
+        image: postgres:10
+        resources:
+          limits:
+            memory: "1024Mi"
+            cpu: "512m"
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: db-data
+        env:
+          - name: POSTGRES_USER
+            value: imart
+          - name: POSTGRES_PASSWORD
+            value: imart
+          - name: POSTGRES_DB
+            value: imart
+      volumes:
+        - name: db-data
+          persistentVolumeClaim:
+            claimName: pvc-imart-db
