@@ -23,7 +23,7 @@ https://gitforwindows.org/
 - 任意のフォルダで、以下のコマンドを実行し、docker プロジェクトをダウンロードします
 
 ```sh
-> git clone https://github.com/rinne-grid/docker-for-intra-mart im
+> git clone https://github.com/rinne-grid/kubernetes-for-intra-mart im
 > cd im
 ```
 
