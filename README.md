@@ -240,11 +240,8 @@ http://localhost:8080/imart/system/login
 
 ![adminer2](http://www.rinsymbol.sakura.ne.jp/github_images/docker/adminer12.PNG)
 
-![tenant5](http://www.rinsymbol.sakura.ne.jp/github_images/docker/tenant5.PNG)
-
 - データベースやストレージ情報は WSL(docker-desktop-data) に保存しているため、データは永続化されています
 
-![dashboard](http://www.rinsymbol.sakura.ne.jp/github_images/docker/dashboard.PNG)
 
 
 #### [13] 複数PodでAPサーバーを起動する
