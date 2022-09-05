@@ -23,8 +23,8 @@ https://gitforwindows.org/
 - 任意のフォルダで、以下のコマンドを実行し、docker プロジェクトをダウンロードします
 
 ```sh
-> git clone https://github.com/rinne-grid/kubernetes-for-intra-mart im
-> cd im
+> git clone https://github.com/rinne-grid/kubernetes-for-intra-mart im-k8s
+> cd im-k8s
 ```
 
 - war ファイルの配置用フォルダを作成します
@@ -92,7 +92,7 @@ imart/resin-web.xml 内容を下記のとおりにします
 ##### war ファイルの出力
 
 imart.war という名称で war ファイルを出力したら、
-プロジェクトの im/ap/war フォルダの中に、war ファイルをコピーします
+プロジェクトの im-k8s/ap/war フォルダの中に、war ファイルをコピーします
 
 #### [5] intra-mart のサイトから Linux の resin-pro をダウンロード
 
@@ -125,17 +125,17 @@ https://sevenzip.osdn.jp/
 #### [7] Docker プロジェクトのフォルダに resin-pro をコピー
 
 - 上記の[6]の 5 のフォルダ「resin-pro.4.0.xx」の名称を resin-pro に変更します
-- resin-pro フォルダを im/ap フォルダにコピーします
+- resin-pro フォルダを im-k8s/ap フォルダにコピーします
 
 #### [8] プロジェクトのフォルダ構成の確認
 
 - フォルダを確認し、以下の構成と同じになっていることを確認します
 - ポイント
-  - im/ap/resin-pro フォルダがあり、直下に automake 等のファイルが存在する
-  - im/ap/war フォルダがあり、imart.war ファイルが存在する
+  - im-k8s/ap/resin-pro フォルダがあり、直下に automake 等のファイルが存在する
+  - im-k8s/ap/war フォルダがあり、imart.war ファイルが存在する
 
 ```
-im
+im-k8s
 │  .env
 │  .gitignore
 │  docker-compose.yml
@@ -156,7 +156,7 @@ im
 
 #### [9] 必要に応じて、設定ファイルを変更する
 
-- im/ap/resin-pro/conf/resin.properties の 82 行目付近 - jvm_args
+- im-k8s/ap/resin-pro/conf/resin.properties の 82 行目付近 - jvm_args
 
 -Xmx, -Xms の値が、初期状態だと 8192m(8GB)が設定されているため、自分の PC のメモリ状況に合わせて変更します
 
@@ -164,7 +164,7 @@ im
 jvm_args : -Dfile.encoding=UTF-8 -Djava.io.tmpdir=tmp -Xmx1500m -Xms1500m -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=30 -XX:NewSize=512m -XX:MaxNewSize=512m -XX:+CMSClassUnloadingEnabled -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+HeapDumpOnOutOfMemoryError -Xloggc:log/gc.log -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=5 -XX:GCLogFileSize=10M
 ```
 
-- HTTP プロキシの設定 im/.env
+- HTTP プロキシの設定 im-k8s/.env
 
 社内ネットワーク等で、プロキシサーバーを経由する必要がある場合、.env の HTTP_PROXY、HTTPS_PROXY に値を設定します
 
@@ -179,7 +179,7 @@ HTTPS_PROXY=http://user:password@server:port/
 - プロジェクトフォルダに移動します
 
 ```sh
-> cd any_folder\im
+> cd any_folder\im-k8s
 ```
 
 - docker-compose を利用し、コンテナをビルドします
